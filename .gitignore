@@ -35,9 +35,9 @@ wheels/
 *~
 .DS_Store
 
-# Streamlit
-.streamlit/
-*.streamlit
+# Streamlit (local cache only, not config)
+.streamlit/cache/
+.streamlit/__pycache__/
 
 # Jupyter
 .ipynb_checkpoints/
