@@ -1,0 +1,117 @@
+ANÁLISIS DESCRIPTIVO
+
+El análisis descriptivo del conjunto de datos "Parque Vehicular, DGII, 2007–2025" se basó en un proceso de exploración estadística y visual, utilizando variables temporales, categóricas y numéricas que describen la evolución del parque vehicular registrado en la República Dominicana. Este análisis permite comprender el comportamiento general de los datos antes de calcular los KPI correspondientes.
+
+⸻
+
+1. Resumen Estadístico
+
+El dataset contiene 179,779 registros y abarca vehículos inscritos entre los años 2007 y 2025. Cada fila representa un grupo de vehículos clasificados por tipo, marca, origen, año de fabricación y otros atributos relevantes.
+
+A partir del análisis estadístico general, se destacan los siguientes puntos:
+	•	Año de Inscripción
+	•	Mínimo: 2007
+	•	Máximo: 2025
+	•	Promedio: 2016.43
+	•	Mediana: 2017.00
+	•	Desviación Estándar: 5.45
+	•	Indica un intervalo amplio que permite observar tendencias a largo plazo en un período de 18 años.
+	•	Mes de Inscripción
+	•	Mínimo: 1
+	•	Máximo: 12
+	•	Promedio: 6.46
+	•	Oscila regularmente entre 1 y 12, mostrando una distribución relativamente uniforme a lo largo del año.
+	•	Año de Entrada
+	•	Mínimo: 2004
+	•	Máximo: 2025
+	•	Promedio: 2016.43
+	•	Coincide con el comportamiento de importación del país, mostrando que la mayoría de vehículos ingresan cercanos a su año de inscripción.
+	•	Año de Fabricación
+	•	Mínimo: 2000
+	•	Máximo: 2206 (valor atípico potencial)
+	•	Promedio: 2011.40
+	•	Mediana: 2012.00
+	•	Permite analizar la antigüedad del parque vehicular, con la mayoría fabricada entre 2000 y 2025.
+	•	Categorías descriptivas
+	•	Descripción Clase presenta 16 tipos distintos, entre ellos: Motocicleta (2.67M vehículos - categoría dominante), Jeep (613K), Automóvil Privado (593K), Carga (272K), Autobús Privado (82K), y otros.
+	•	Tipo incluye 8 clasificaciones, siendo 5-Motocicletas la más frecuente con 2.67M vehículos, seguida por 3-Jeep (613K) y 1-Automóviles (594K).
+	•	Origen comprende 12 regiones, destacando OTROS (1.75M - 20.5%), JAPONESES (1.46M - 17.1%), AMERICANO (470K - 5.5%), KOREANO (289K - 3.4%), y otros mercados.
+	•	Marca incluye 1,804 marcas distintas, siendo Honda la más frecuente con 487,176 apariciones, seguida de Toyota (283,613), Suzuki (281,474), Ford (266,150) y Yamaha (257,732).
+	•	Cantidad
+	•	Mínimo: 1
+	•	Máximo: 4,274,581
+	•	Promedio por grupo: 47.55
+	•	Mediana: 2
+	•	Desviación Estándar: 10,082.04
+	•	Esto evidencia que algunas categorías representan volúmenes extremadamente grandes, mientras que otras son muy pequeñas. La distribución es altamente concentrada.
+	•	Total de vehículos en el dataset: 8,549,162
+
+Estos resultados muestran que el histórico del parque vehicular dominicano está compuesto por una mezcla amplia de tipos de vehículos, con predominancia de motocicletas, orígenes principalmente importados, y una antigüedad moderada con tendencia hacia flota más nueva en años recientes.
+
+⸻
+
+2. Visualización de los Datos
+
+Para comprender mejor el comportamiento del dataset se generaron tres visualizaciones fundamentales, alineadas con los KPI a analizar posteriormente.
+
+⸻
+
+A. Total de vehículos por año de inscripción
+
+La primera gráfica muestra la suma total anual de vehículos inscritos entre 2007 y 2025.
+
+Observaciones clave:
+	•	Se aprecia una tendencia claramente creciente, especialmente desde 2017.
+	•	Los años 2024, 2023 y 2021 representan los picos máximos de inscripción (386K, 345K y 301K respectivamente).
+	•	Hay variaciones notables entre periodos, posiblemente asociadas a factores económicos, regulatorios o cambios en la política de importación.
+	•	El volumen total de inscripciones se mantiene relativamente alto en los últimos años, indicando un mercado dinámico.
+	•	La serie completa suma 4,274,581 vehículos inscritos durante el período analizado.
+
+(Gráfica generada: 01_total_by_year_CORRECTED.png)
+
+⸻
+
+B. Distribución del parque vehicular por origen (Top 10)
+
+Se generó un gráfico de barras con los 10 orígenes más frecuentes, que representa el 99.9% del parque.
+
+Hallazgos:
+	•	OTROS (1.75M vehículos - 20.5%) es el origen más representado, seguido de cerca por JAPONESES (1.46M - 17.1%).
+	•	Vehículos americanos (470K - 5.5%) ocupan el tercer lugar.
+	•	Mercados asiáticos: Corea (KOREANO + KOREANOS: 366K - 4.3%) muestran participación significativa.
+	•	Mercados europeos (EUROPEOS + EUROPEO: 85K - 1.0%) tienen presencia limitada.
+	•	Otros orígenes como China, Taiwan y Suecia representan menos del 0.1%.
+	•	La distribución evidencia la fuerte dependencia del país de mercados automotrices externos, especialmente de Asia.
+
+(Gráfica generada: 02_top_origins_CORRECTED.png)
+
+⸻
+
+C. Edad promedio del parque vehicular por año de inscripción
+
+Aquí se calculó la edad promedio ponderada de los vehículos inscritos cada año, utilizando la fórmula correcta: Edad = Año Actual (2025) - Año Fabricación.
+
+Resultados:
+	•	El parque vehicular presenta una edad promedio de 12.60 años en general.
+	•	Año 2007 (inicio del período): 20.47 años promedio (vehículos más antiguos al momento de inscripción).
+	•	Año 2025 (más reciente): 4.40 años promedio (vehículos más modernos en inscripciones recientes).
+	•	Se aprecia una tendencia clara y consistente de disminución de edad a través de los años.
+	•	A partir de 2017 se observa una aceleración en la reducción de edad promedio, indicando un aumento de inscripciones de vehículos más nuevos.
+	•	El rango de variación (4.40 - 20.47 años) muestra una flota heterogénea con vehículos desde muy antiguos hasta muy modernos.
+	•	La desviación estándar de 5.25 años indica variabilidad moderada en la antigüedad del parque.
+
+(Gráfica generada: 03_average_age_CORRECTED.png)
+
+⸻
+
+Conclusión del Análisis Descriptivo
+
+El dataset posee suficiente profundidad temporal y diversidad categórica para generar indicadores significativos sobre la evolución del parque vehicular dominicano. Las estadísticas y visualizaciones muestran:
+	•	Una tendencia creciente en la inscripción de vehículos, con máximos en 2024,
+	•	Una fuerte dependencia de importaciones, con mercados asiáticos como principales proveedores,
+	•	Una flota envejecida con edad promedio de 12.60 años, pero con tendencia clara hacia renovación,
+	•	Una distribución altamente concentrada en motocicletas (31.2% de la flota), vehículos japoneses y asiáticos,
+	•	Y marcas líderes como Honda, Toyota y Suzuki que dominan el mercado dominicano,
+	•	Una clara correlación entre años recientes de inscripción y vehículos más nuevos, sugiriendo una aceleración en la renovación del parque.
+
+Estos hallazgos constituyen la base sólida para el cálculo de los KPI seleccionados y permiten contextualizar las conclusiones posteriores dentro de un marco de referencia bien fundamentado.
