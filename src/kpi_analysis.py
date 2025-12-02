@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+from datetime import datetime
 
 """
 KPI ANALYSIS: PARQUE VEHICULAR DGII 2007-2025
@@ -11,35 +12,55 @@ Este script implementa los KPIs para el análisis del parque vehicular
 dominicano con todas las correcciones y validaciones necesarias.
 
 El código ha sido validado contra los datos reales del dataset.
+
+Output: genera gráficas PNG y archivo TXT con análisis completo
 """
 
 # ===== CONFIGURATION =====
 # Configure the path to the data file
 data_path = os.path.join(os.path.dirname(__file__), "..", "data", "Parque vehicular, DGII, 2007-2025.xlsx")
 output_path = os.path.join(os.path.dirname(__file__), "..", "reports")
+log_file = os.path.join(output_path, f"kpi_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt")
+
+# ===== LOGGING SETUP =====
+class DualLogger:
+    """Clase para escribir simultaneamente en consola y archivo"""
+    def __init__(self, filename):
+        self.file = open(filename, 'w', encoding='utf-8')
+        self.console = None
+    
+    def write(self, message):
+        print(message)
+        self.file.write(message + '\n')
+        self.file.flush()
+    
+    def close(self):
+        self.file.close()
+
+logger = DualLogger(log_file)
 
 # ===== LOAD AND PREPARE DATA =====
-print("Cargando datos...")
+logger.write("Cargando datos...")
 df = pd.read_excel(data_path)
 
 # Clean column names (important fix)
 df.columns = df.columns.str.rstrip()
 
-print(f"✓ Datos cargados: {len(df):,} registros, {df.shape[1]} columnas")
-print(f"✓ Total de vehículos: {df['Cantidad'].sum():,}\n")
+logger.write(f"✓ Datos cargados: {len(df):,} registros, {df.shape[1]} columnas")
+logger.write(f"✓ Total de vehículos: {df['Cantidad'].sum():,}\n")
 
 # ===== KPI 1: TOTAL VEHICLES PER YEAR =====
-print("=" * 80)
-print("KPI 1: TOTAL DE VEHÍCULOS POR AÑO DE INSCRIPCIÓN")
-print("=" * 80)
+logger.write("=" * 80)
+logger.write("KPI 1: TOTAL DE VEHÍCULOS POR AÑO DE INSCRIPCIÓN")
+logger.write("=" * 80)
 
 totals_by_year = df.groupby("Año Inscripción")["Cantidad"].sum()
 
-print(f"\nRango de años: {int(totals_by_year.index.min())} - {int(totals_by_year.index.max())}")
-print(f"Total de vehículos: {totals_by_year.sum():,}")
-print(f"\nTop 5 años con mayor inscripción:")
+logger.write(f"\nRango de años: {int(totals_by_year.index.min())} - {int(totals_by_year.index.max())}")
+logger.write(f"Total de vehículos: {totals_by_year.sum():,}")
+logger.write(f"\nTop 5 años con mayor inscripción:")
 for idx, (year, qty) in enumerate(totals_by_year.sort_values(ascending=False).head(5).items(), 1):
-    print(f"  {idx}. {int(year)}: {qty:,} vehículos")
+    logger.write(f"  {idx}. {int(year)}: {qty:,} vehículos")
 
 # Generate visualization
 fig, ax = plt.subplots(figsize=(14, 6))
@@ -51,23 +72,23 @@ ax.grid(True, alpha=0.3, linestyle='--')
 ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: f'{int(x/1000)}K'))
 plt.tight_layout()
 plt.savefig(os.path.join(output_path, "01_total_by_year_CORRECTED.png"), dpi=300, bbox_inches='tight')
-print("\n✓ Gráfica guardada: 01_total_by_year_CORRECTED.png")
+logger.write("\n✓ Gráfica guardada: 01_total_by_year_CORRECTED.png")
 
 # ===== KPI 2: DISTRIBUTION BY ORIGIN (TOP 10) =====
-print("\n" + "=" * 80)
-print("KPI 2: DISTRIBUCIÓN POR ORIGEN (TOP 10)")
-print("=" * 80)
+logger.write("\n" + "=" * 80)
+logger.write("KPI 2: DISTRIBUCIÓN POR ORIGEN (TOP 10)")
+logger.write("=" * 80)
 
 # Remove NaN values from Origin for this analysis
 df_valid_origin = df.dropna(subset=['Origen'])
 origin_totals = df_valid_origin.groupby("Origen")["Cantidad"].sum().sort_values(ascending=False).head(10)
 
-print(f"\nOrígenes totales en dataset: {df['Origen'].nunique()}")
-print(f"Registros con origen especificado: {len(df_valid_origin):,}")
-print(f"\nTop 10 orígenes:")
+logger.write(f"\nOrígenes totales en dataset: {df['Origen'].nunique()}")
+logger.write(f"Registros con origen especificado: {len(df_valid_origin):,}")
+logger.write(f"\nTop 10 orígenes:")
 for idx, (origin, qty) in enumerate(origin_totals.items(), 1):
     percentage = (qty / df['Cantidad'].sum()) * 100
-    print(f"  {idx:2d}. {origin:15s}: {qty:>10,} vehículos ({percentage:5.2f}%)")
+    logger.write(f"  {idx:2d}. {origin:15s}: {qty:>10,} vehículos ({percentage:5.2f}%)")
 
 # Generate visualization
 fig, ax = plt.subplots(figsize=(12, 7))
@@ -86,12 +107,12 @@ for i, (bar, val) in enumerate(zip(bars, origin_totals.values)):
 
 plt.tight_layout()
 plt.savefig(os.path.join(output_path, "02_top_origins_CORRECTED.png"), dpi=300, bbox_inches='tight')
-print("\n✓ Gráfica guardada: 02_top_origins_CORRECTED.png")
+logger.write("\n✓ Gráfica guardada: 02_top_origins_CORRECTED.png")
 
 # ===== KPI 3: AVERAGE AGE PER YEAR =====
-print("\n" + "=" * 80)
-print("KPI 3: EDAD PROMEDIO DEL PARQUE VEHICULAR POR AÑO")
-print("=" * 80)
+logger.write("\n" + "=" * 80)
+logger.write("KPI 3: EDAD PROMEDIO DEL PARQUE VEHICULAR POR AÑO")
+logger.write("=" * 80)
 
 # Get current year dynamically
 from datetime import datetime
@@ -104,9 +125,9 @@ df_valid_age = df[
     (df["Año Fabricación"] >= 1900)
 ].copy()
 
-print(f"\nRegistros válidos para análisis de edad: {len(df_valid_age):,} de {len(df):,}")
-print(f"Registros excluidos: {len(df) - len(df_valid_age):,}")
-print(f"Año actual utilizado para cálculo: {año_actual}")
+logger.write(f"\nRegistros válidos para análisis de edad: {len(df_valid_age):,} de {len(df):,}")
+logger.write(f"Registros excluidos: {len(df) - len(df_valid_age):,}")
+logger.write(f"Año actual utilizado para cálculo: {año_actual}")
 
 # Calculate weighted average age per year using CURRENT YEAR
 # Formula: Edad = Año Actual - Año Fabricación
@@ -117,15 +138,15 @@ age_by_year = df_valid_age.groupby("Año Inscripción").apply(
     include_groups=False
 ).sort_index()
 
-print(f"\nEdad promedio del parque: {age_by_year.mean():.2f} años")
-print(f"Rango de edades: {age_by_year.min():.2f} - {age_by_year.max():.2f} años")
-print(f"\nAños con mayor antigüedad (top 3):")
+logger.write(f"\nEdad promedio del parque: {age_by_year.mean():.2f} años")
+logger.write(f"Rango de edades: {age_by_year.min():.2f} - {age_by_year.max():.2f} años")
+logger.write(f"\nAños con mayor antigüedad (top 3):")
 for idx, (year, age) in enumerate(age_by_year.sort_values(ascending=False).head(3).items(), 1):
-    print(f"  {idx}. {int(year)}: {age:.2f} años")
+    logger.write(f"  {idx}. {int(year)}: {age:.2f} años")
 
-print(f"\nAños más modernos (top 3):")
+logger.write(f"\nAños más modernos (top 3):")
 for idx, (year, age) in enumerate(age_by_year.sort_values(ascending=True).head(3).items(), 1):
-    print(f"  {idx}. {int(year)}: {age:.2f} años")
+    logger.write(f"  {idx}. {int(year)}: {age:.2f} años")
 
 # Generate visualization
 fig, ax = plt.subplots(figsize=(14, 6))
@@ -138,32 +159,38 @@ ax.grid(True, alpha=0.3, linestyle='--')
 ax.set_ylim(0, max(age_by_year.values) * 1.1)
 plt.tight_layout()
 plt.savefig(os.path.join(output_path, "03_average_age_CORRECTED.png"), dpi=300, bbox_inches='tight')
-print("\n✓ Gráfica guardada: 03_average_age_CORRECTED.png")
+logger.write("\n✓ Gráfica guardada: 03_average_age_CORRECTED.png")
 
 # ===== ADDITIONAL INSIGHTS =====
-print("\n" + "=" * 80)
-print("INSIGHTS ADICIONALES")
-print("=" * 80)
+logger.write("\n" + "=" * 80)
+logger.write("INSIGHTS ADICIONALES")
+logger.write("=" * 80)
 
 # Top brands
-print("\nTop 5 Marcas:")
+logger.write("\nTop 5 Marcas:")
 top_brands = df.groupby('Marca')['Cantidad'].sum().sort_values(ascending=False).head(5)
 for idx, (brand, qty) in enumerate(top_brands.items(), 1):
-    print(f"  {idx}. {brand}: {qty:,} vehículos")
+    logger.write(f"  {idx}. {brand}: {qty:,} vehículos")
 
 # Vehicle types distribution
-print("\nDistribución por Tipo de Vehículo:")
+logger.write("\nDistribución por Tipo de Vehículo:")
 type_dist = df.groupby('Tipo')['Cantidad'].sum().sort_values(ascending=False)
 for typ, qty in type_dist.items():
     if pd.notna(typ):
         percentage = (qty / df['Cantidad'].sum()) * 100
-        print(f"  {typ}: {qty:,} vehículos ({percentage:.2f}%)")
+        logger.write(f"  {typ}: {qty:,} vehículos ({percentage:.2f}%)")
 
-print("\n" + "=" * 80)
-print("✓ ANÁLISIS DE KPIs COMPLETADO")
-print("=" * 80)
-print("\nGráficas generadas:")
-print("  1. 01_total_by_year_CORRECTED.png")
-print("  2. 02_top_origins_CORRECTED.png")
-print("  3. 03_average_age_CORRECTED.png")
-print(f"\nUbicación: {output_path}")
+logger.write("\n" + "=" * 80)
+logger.write("✓ ANÁLISIS DE KPIs COMPLETADO")
+logger.write("=" * 80)
+logger.write("\nGráficas generadas:")
+logger.write("  1. 01_total_by_year_CORRECTED.png")
+logger.write("  2. 02_top_origins_CORRECTED.png")
+logger.write("  3. 03_average_age_CORRECTED.png")
+logger.write(f"\nUbicación: {output_path}")
+logger.write(f"\nArchivo de log: {log_file}")
+logger.write("\n" + "=" * 80)
+
+# Close logger to flush and save file
+logger.close()
+print(f"\n✓ Análisis completado. Log guardado en: {log_file}")

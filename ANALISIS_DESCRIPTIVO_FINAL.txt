@@ -43,8 +43,42 @@ A partir del análisis estadístico general, se destacan los siguientes puntos:
 	•	Promedio por grupo: 47.55
 	•	Mediana: 2
 	•	Desviación Estándar: 10,082.04
-	•	Esto evidencia que algunas categorías representan volúmenes extremadamente grandes, mientras que otras son muy pequeñas. La distribución es altamente concentrada.
-	•	Total de vehículos en el dataset: 8,549,162
+	
+	NOTA IMPORTANTE SOBRE "CANTIDAD":
+	La columna "Cantidad" NO representa el total de vehículos, sino cuántos vehículos 
+	hay en CADA GRUPO específico del dataset. Cada fila representa una combinación única de:
+	Año Inscripción + Mes + Clase + Tipo + Año Fabricación + Origen + Marca.
+	
+	Ejemplos para clarificar:
+	• Si una fila dice "Honda, 2020, RD, Motocicleta" con Cantidad: 500
+	  → Significa: 500 Hondas de 2020 registradas en RD como motocicletas
+	• Si otra fila dice "Toyota, 2015, Japón, Automóvil" con Cantidad: 2
+	  → Significa: 2 Toyotas de 2015 en esa categoría específica
+	
+	Interpretación de estadísticas:
+	• Mínimo 1: Hay grupos muy específicos con solo 1 vehículo
+	• Máximo 4,274,581: Es el total consolidado del grupo más grande (Honda de todo el período)
+	• Promedio 47.55: En promedio, cada grupo tiene ~48 vehículos
+	• Mediana 2: El 50% de los grupos tiene 2 o menos vehículos (muchas categorías raras)
+	• Desv. Est. 10,082: Distribución altamente concentrada (pocos grupos grandes, muchos pequeños)
+	
+	Distribución de frecuencias por tamaño de grupo:
+	• 66,159 grupos con 1 vehículo (36.8%)
+	• 73,870 grupos con 2-10 vehículos (41.1%)
+	• 31,865 grupos con 11-100 vehículos (17.7%)
+	• 7,265 grupos con 101-1,000 vehículos (4.0%)
+	• 620 grupos con 1,001-10,000 vehículos (0.3%)
+	• 1 grupo con 4,274,581 vehículos (0.0%)
+	
+	Conclusión: El 78% de los grupos tiene menos de 10 vehículos, indicando que el dataset
+	está altamente segmentado en categorías específicas, mientras que unos pocos grupos
+	dominan el volumen total.
+	
+	•	Total de vehículos en el dataset: 4,274,581
+	
+	NOTA: El dataset contiene 8,549,162 registros totales, pero 4,274,581 corresponden a 
+	vehículos sin categorizar (última fila con valores NaN). El análisis utiliza solo los 
+	4,274,581 vehículos correctamente categorizados por año, marca, origen y tipo.
 
 Estos resultados muestran que el histórico del parque vehicular dominicano está compuesto por una mezcla amplia de tipos de vehículos, con predominancia de motocicletas, orígenes principalmente importados, y una antigüedad moderada con tendencia hacia flota más nueva en años recientes.
 
